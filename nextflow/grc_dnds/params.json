@@ -1,0 +1,5 @@
+{
+	"input_fasta_dir" : "${launchDir}/data/inputs/CDS_fastas/*",
+        "outdir" : "${launchDir}/data/results/grc_dnds"
+}
+
