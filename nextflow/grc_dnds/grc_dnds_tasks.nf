@@ -98,10 +98,10 @@ process concat_orthogroup_topologies{
 // Runs clean_alignments.sh and meta_clean_alignments.sh (which does the following)
 // Runs prequal # check?
 // Aligns codon sequences based on amino acid translations with MACSEv2
-// Uses BMGE to filter unreliably aligned columns # definitely seems like not a good idea
+// Uses BMGE to filter unreliably aligned columns 
 // https://academic.oup.com/sysbio/article/64/5/778/1685763
 
-// is this step really needed for codeml? we have trees from orthofinder?
+// is this step needed for codeml? we have trees from orthofinder?
 // look at /lustre/scratch126/tol/teams/jaron/users/fede/CDS_seqs/CleanAlignments/ for input
 // what does -b do?
 // Is it just because of the filtering and we could use the trees straight out of orthofinder?
