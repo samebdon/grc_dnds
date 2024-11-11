@@ -13,4 +13,4 @@ workflow {
 }
 
 // mamba activate grc_dnds
-// mamba install -c conda-forge -c bioconda orthofinder
+// mamba install -c conda-forge -c bioconda orthofinder ag
