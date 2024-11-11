@@ -1,0 +1,4 @@
+data/
+logs/
+.nextflow*
+.DS_Store

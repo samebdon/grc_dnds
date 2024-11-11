@@ -1,5 +1,5 @@
 {
-	"input_fasta_dir" : "${launchDir}/data/inputs/CDS_fastas/*",
+	"input_tsv" : "${launchDir}/data/inputs/sciaridae_inputs.tsv",
         "outdir" : "${launchDir}/data/results/grc_dnds"
 }
 

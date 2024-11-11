@@ -1,56 +1,50 @@
-// if genome and gff3
+process filterIncompleteGeneModelsAGAT{
+        memory '4G'
+
+        input:
+        val(meta), path(gff3), path(genome)
+
+        output:
+        val(meta), path("${meta}.agat.complete_genes.gff3")
+
+        script:
+        """
+        agat_sp_filter_incomplete_gene_coding_models.pl -gff ${gff3} --fasta ${genome} -o ${meta}.agat.complete_genes.gff3
+        """
+}
 
 process getLongestIsoformAGAT{
         memory '4G'
 
         input:
-        path(annotation)
+        tuple val(meta), path(gff3)
 
         output:
-        path("${annotation.simpleName}.agat.longest_isoform.gff3")
+        tuple val(meta), path("${meta}.agat.longest_isoform.gff3")
 
         script:
         """
-        agat_sp_keep_longest_isoform.pl -gff ${annotation} -o ${annotation.simpleName}.agat.longest_isoform.gff3
+        agat_sp_keep_longest_isoform.pl -gff ${gff3} -o ${meta}.agat.longest_isoform.gff3
         """
 }
 
-// awk '\$3=="exon"' ${meta}.longest_isoform.gff3 > ${meta}.longest_isoform.cds.gff3
-
-process filterIncompleteGeneModelsAGAT{
-        memory '4G'
-
-        input:
-        path(annotation)
-
-        output:
-        path("${annotation.simpleName}.agat.complete_genes.gff3")
-
-        script:
-        """
-        agat_sp_filter_incomplete_gene_coding_models.pl -gff ${annotation} --fasta ${genome.fa} -o ${annotation.simpleName}.agat.complete_genes.gff3
-        """
-}
-
-// This is not right - want to select the genes from the above filtered gff3s 
-process getFasta{
+process select_proteins{
         publishDir params.outdir, mode:'copy'
         memory '4G'
 
         input:
-        path(fasta)
-        path(intervals)
+        tuple val(meta), path(gff3), path(prot_fa)
 
         output:
-        path("${fasta.baseName}.longest_isoforms.fa")
+        tuple val(meta), path("${meta}.selected_proteins.fa")
 
         script:
         """
-        bedtools getfasta -fi ${fasta} -bed ${intervals} > ${fasta.simpleName}.longest_isoforms.fa
+        rm ${meta}.selected_proteins.fa
+        select_proteins.sh ${gff3} ${prot_fa} >> ${meta}.selected_proteins.fa
         """
-}
 
-// else protein filtering
+}
 
 process orthofinder {
         publishDir params.outdir, mode:'copy'
@@ -58,7 +52,7 @@ process orthofinder {
         scratch true
 
         input:
-        path(prot_fastas, stageAs: "fastas/*")
+        tuple val(meta_list), path(prot_fastas, stageAs: "fastas/*")
 
         output:
         path("orthofinder_results/*")
