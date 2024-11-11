@@ -11,10 +11,10 @@ workflow grc_dnds_flow {
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(datasets.meta, datasets.gff3, datasets.genome)
          getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         select_proteins(getLongestIsoformAGAT.out.join(datasets.meta, datasets.prot_fa)
+         select_proteins(getLongestIsoformAGAT.out.join(datasets.meta, datasets.prot_fa))
 
          // checking
-         select_proteins.collect(flat:false).map{it.transpose()} | view
+         select_proteins.collect(flat:false).map{it.transpose()}.view()
 
          // orthology inference
          orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
