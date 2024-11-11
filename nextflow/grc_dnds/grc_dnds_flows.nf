@@ -6,7 +6,7 @@ workflow grc_dnds_flow {
          input_tsv // channel: [ val(meta), /path/to/genome, /path/to/cds, /path/to/gff3, /path/to/prot_fa]
         
         main:
-         datasets = Channel.fromPath(input_tsv) | splitCsv( header: true, sep: '\t')
+         datasets = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t')
 
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(datasets.meta, datasets.gff3, datasets.genome)
