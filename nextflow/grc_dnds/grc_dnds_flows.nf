@@ -8,6 +8,7 @@ workflow grc_dnds_flow {
         main:
          // parse data
          dataset_ch = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t')
+         dataset_ch.view()
          split_data(dataset_ch)
 
          // select suitable proteins for orthology inference
