@@ -3,13 +3,12 @@ include {split_data; getLongestIsoformAGAT; filterIncompleteGeneModelsAGAT; sele
 workflow grc_dnds_flow {
 
         take:
-         input_tsv // channel: [ val(meta), /path/to/genome, /path/to/cds, /path/to/gff3, /path/to/prot_fa]
+         input_tsv // channel: [ val(meta), /path/to/genome, /path/to/cds, /path/to/gff, /path/to/prot_fa]
         
         main:
          // parse data
-         dataset_ch = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t')
-         dataset_ch.view()
-         split_data(dataset_ch)
+         data_ch = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t').map{row->tuple(row.meta, file(row.genome), file(row.cds), file(row.gff), file(row.prot_fa))}
+         split_data(data_ch)
 
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(split_data.out.gff.join(split_data.out.genome))
