@@ -17,14 +17,14 @@ workflow grc_dnds_flow {
                         prot_fa: [row.meta, row.prot_fa]
                         }
                 .set{ data_ch }
-                
+
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(data_ch.gff.join(data_ch.genome))
-         //getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         //select_proteins(getLongestIsoformAGAT.out.join(data_ch.prot_fa))
+         getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
+         select_proteins(getLongestIsoformAGAT.out.join(data_ch.prot_fa))
 
          // checking
-         //select_proteins.collect(flat:false).map{it.transpose()}.view()
+         select_proteins.collect(flat:false).map{it.transpose()}.view()
 
          // orthology inference
          //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
