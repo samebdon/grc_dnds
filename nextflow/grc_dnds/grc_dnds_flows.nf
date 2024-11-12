@@ -1,4 +1,4 @@
-include {split_data; getLongestIsoformAGAT; filterIncompleteGeneModelsAGAT; select_proteins; orthofinder; select_orthogroups; concat_orthogroup_topologies; iqtree2; codeml; plot_dnds_distributions} from './grc_dnds_tasks.nf'
+include {getLongestIsoformAGAT; filterIncompleteGeneModelsAGAT; select_proteins; orthofinder; select_orthogroups; concat_orthogroup_topologies; iqtree2; codeml; plot_dnds_distributions} from './grc_dnds_tasks.nf'
 
 workflow grc_dnds_flow {
 
@@ -10,16 +10,17 @@ workflow grc_dnds_flow {
          Channel
                 .fromPath( input_tsv )
                 .splitCsv( header: true, sep: '\t')
-                .map{ row -> tuple( row.meta, row.genome, row.cds, row.gff, row.prot_fa)}
+                .multiMap{ row -> 
+                        genome: [row.meta, row.genome]
+                        cds:  [row.meta, row.cds]
+                        gff: [row.meta, row.gff]
+                        prot_fa: [row.meta, row.prot_fa]
+                        }
                 .set{ data_ch }
-         split_data(data_ch)
-         split_data.out.gff.view()
-         split_data.out.genome.view()
-
          // select suitable proteins for orthology inference
-         //filterIncompleteGeneModelsAGAT(split_data.out.gff.join(split_data.out.genome))
+         filterIncompleteGeneModelsAGAT(data_ch.gff.join(data_ch.genome))
          //getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         //select_proteins(getLongestIsoformAGAT.out.join(split_data.out.prot_fa))
+         //select_proteins(getLongestIsoformAGAT.out.join(data_ch.prot_fa))
 
          // checking
          //select_proteins.collect(flat:false).map{it.transpose()}.view()

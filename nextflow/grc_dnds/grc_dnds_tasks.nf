@@ -1,21 +1,3 @@
-process split_data{
-
-        input:
-        tuple val(meta), path(genome, stageAs: "genome/*"), path(cds, stageAs: "cds/*"), path(gff,  stageAs: "gff/*"), path(prot_fa, stageAs: "prot_fa/*")
-
-        output:
-        tuple val(meta), path("genome/*"), emit: genome
-        tuple val(meta), path("cds/*"), emit: cds
-        tuple val(meta), path("gff/*"), emit: gff
-        tuple val(meta), path("prot_fa/*"), emit: prot_fa
-
-        script:
-        """
-        echo 'Split data channels'
-        """
-}
-
-
 process filterIncompleteGeneModelsAGAT{
         memory '4G'
 
