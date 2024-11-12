@@ -2,7 +2,7 @@
 
 #BSUB -o logs/grc_dnds.out.%J
 #BSUB -e logs/grc_dnds.err.%J
-#BSUB -q basement
+#BSUB -q normal
 #BSUB -n 4
 #BSUB -M 4096
 #BSUB -R "select[mem>4096] rusage[mem=4096]"
