@@ -7,7 +7,7 @@ workflow grc_dnds_flow {
         
         main:
          // parse data
-         data_ch = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t').map{row->tuple(row.meta, file(row.genome), file(row.cds), file(row.gff), file(row.prot_fa))}
+         data_ch = Channel.fromPath(input_tsv).splitCsv( header: true, sep: '\t').map{row->tuple(row.meta, path(row.genome), path(row.cds), path(row.gff), path(row.prot_fa))}
          split_data(data_ch)
 
          // select suitable proteins for orthology inference
