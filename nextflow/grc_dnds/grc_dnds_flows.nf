@@ -12,7 +12,7 @@ workflow grc_dnds_flow {
          split_data(dataset_ch)
 
          // select suitable proteins for orthology inference
-         filterIncompleteGeneModelsAGAT(split_data.out.gff3.join(split_data.out.genome))
+         filterIncompleteGeneModelsAGAT(split_data.out.gff.join(split_data.out.genome))
          getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
          select_proteins(getLongestIsoformAGAT.out.join(split_data.out.prot_fa))
 

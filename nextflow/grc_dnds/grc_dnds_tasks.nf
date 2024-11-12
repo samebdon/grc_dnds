@@ -1,12 +1,12 @@
 process split_data{
 
         input:
-        tuple val(meta), path(genome), path(cds), path(gff3), path(prot_fa)
+        tuple val(meta), path(genome), path(cds), path(gff), path(prot_fa)
 
         output:
         tuple val(meta), path(genome), emit: genome
         tuple val(meta), path(cds), emit: cds
-        tuple val(meta), path(gff3), emit: gff3
+        tuple val(meta), path(gff), emit: gff
         tuple val(meta), path(prot_fa), emit: prot_fa
 
         script:
@@ -20,14 +20,14 @@ process filterIncompleteGeneModelsAGAT{
         memory '4G'
 
         input:
-        val(meta), path(gff3), path(genome)
+        val(meta), path(gff), path(genome)
 
         output:
         val(meta), path("${meta}.agat.complete_genes.gff3")
 
         script:
         """
-        agat_sp_filter_incomplete_gene_coding_models.pl -gff ${gff3} --fasta ${genome} -o ${meta}.agat.complete_genes.gff3
+        agat_sp_filter_incomplete_gene_coding_models.pl -gff ${gff} --fasta ${genome} -o ${meta}.agat.complete_genes.gff3
         """
 }
 
@@ -35,14 +35,14 @@ process getLongestIsoformAGAT{
         memory '4G'
 
         input:
-        tuple val(meta), path(gff3)
+        tuple val(meta), path(gff)
 
         output:
         tuple val(meta), path("${meta}.agat.longest_isoform.gff3")
 
         script:
         """
-        agat_sp_keep_longest_isoform.pl -gff ${gff3} -o ${meta}.agat.longest_isoform.gff3
+        agat_sp_keep_longest_isoform.pl -gff ${gff} -o ${meta}.agat.longest_isoform.gff3
         """
 }
 
@@ -51,7 +51,7 @@ process select_proteins{
         memory '4G'
 
         input:
-        tuple val(meta), path(gff3), path(prot_fa)
+        tuple val(meta), path(gff), path(prot_fa)
 
         output:
         tuple val(meta), path("${meta}.selected_proteins.fa")
@@ -59,7 +59,7 @@ process select_proteins{
         script:
         """
         rm ${meta}.selected_proteins.fa
-        select_proteins.sh ${gff3} ${prot_fa} >> ${meta}.selected_proteins.fa
+        select_proteins.sh ${gff} ${prot_fa} >> ${meta}.selected_proteins.fa
         """
 
 }
