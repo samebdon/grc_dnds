@@ -2,10 +2,10 @@ process filterIncompleteGeneModelsAGAT{
         memory '4G'
 
         input:
-        val(meta), path(gff), path(genome)
+        tuple val(meta), path(gff), path(genome)
 
         output:
-        val(meta), path("${meta}.agat.complete_genes.gff3")
+        tuple val(meta), path("${meta}.agat.complete_genes.gff3")
 
         script:
         """

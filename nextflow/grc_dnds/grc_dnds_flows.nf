@@ -1,4 +1,4 @@
-include {getLongestIsoformAGAT; filterIncompleteGeneModelsAGAT; select_proteins; orthofinder; select_orthogroups; concat_orthogroup_topologies; iqtree2; codeml; plot_dnds_distributions} from './grc_dnds_tasks.nf'
+include {filterIncompleteGeneModelsAGAT; getLongestIsoformAGAT; select_proteins; orthofinder; select_orthogroups; concat_orthogroup_topologies; iqtree2; codeml; plot_dnds_distributions} from './grc_dnds_tasks.nf'
 
 workflow grc_dnds_flow {
 
@@ -17,6 +17,7 @@ workflow grc_dnds_flow {
                         prot_fa: [row.meta, row.prot_fa]
                         }
                 .set{ data_ch }
+                
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(data_ch.gff.join(data_ch.genome))
          //getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
