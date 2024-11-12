@@ -10,19 +10,20 @@ workflow grc_dnds_flow {
          Channel
                 .fromPath( input_tsv )
                 .splitCsv( header: true, sep: '\t')
-                .view()
-                //.map{ row -> tuple( row.meta, path(row.genome), path(row.cds), path(row.gff), path(row.prot_fa))}
-                //.set{ data_ch }
+                .map{ row -> tuple( row.meta, row.genome, row.cds, row.gff, row.prot_fa)}
+                .set{ data_ch }
          split_data(data_ch)
+         split_data.out.gff.view()
+         split_data.out.genome.view()
 
          // select suitable proteins for orthology inference
-         filterIncompleteGeneModelsAGAT(split_data.out.gff.join(split_data.out.genome))
-         getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         select_proteins(getLongestIsoformAGAT.out.join(split_data.out.prot_fa))
+         //filterIncompleteGeneModelsAGAT(split_data.out.gff.join(split_data.out.genome))
+         //getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
+         //select_proteins(getLongestIsoformAGAT.out.join(split_data.out.prot_fa))
 
          // checking
-         select_proteins.collect(flat:false).map{it.transpose()}.view()
+         //select_proteins.collect(flat:false).map{it.transpose()}.view()
 
          // orthology inference
-         orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
+         //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
 }
