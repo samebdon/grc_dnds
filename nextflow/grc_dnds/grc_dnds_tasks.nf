@@ -37,11 +37,11 @@ process select_proteins{
 
         output:
         tuple val(meta), path("${meta}.selected_proteins.fa")
+        path("${meta}.selected_proteins.fa"), emit: file
 
         script:
         """
-        rm -f ${meta}.selected_proteins.fa
-        select_proteins.sh ${gff} ${prot_fa} >> ${meta}.selected_proteins.fa
+        select_proteins.sh ${gff} ${prot_fa} > ${meta}.selected_proteins.fa
         """
 
 }

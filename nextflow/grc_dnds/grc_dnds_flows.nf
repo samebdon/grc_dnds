@@ -36,8 +36,9 @@ workflow grc_dnds_flow {
          select_proteins(getLongestIsoformAGAT.out.join(braker_ch.prot_fa))
 
          // checking
-         //select_proteins
-         //       .collect{ flat:false }
+         select_proteins.out
+                .collect( flat:false )
+                .view()
          //       .concat(prot_ch)
          //       .map{ it.transpose() }
          //       .set( selected_prot_ch )
