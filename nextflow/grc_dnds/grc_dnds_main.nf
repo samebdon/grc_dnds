@@ -1,7 +1,8 @@
 log.info """\
          G R C   D N / D S   N F   P I P E L I N E    
          ===================================
-         Input TSV : ${params.input_tsv}
+         Braker TSV : ${params.braker_tsv}
+         Protein TSV : ${params.protein_tsv}
          outdir : ${params.outdir}
          """
          .stripIndent()
@@ -9,7 +10,7 @@ log.info """\
 include { grc_dnds_flow } from './grc_dnds_flows.nf'
 
 workflow {
-        grc_dnds_flow(params.input_tsv)
+        grc_dnds_flow(params.braker_tsv, params.protein_tsv)
 }
 
 // mamba activate grc_dnds

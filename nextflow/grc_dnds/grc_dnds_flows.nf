@@ -3,12 +3,13 @@ include {filterIncompleteGeneModelsAGAT; getLongestIsoformAGAT; select_proteins;
 workflow grc_dnds_flow {
 
         take:
-         input_tsv // channel: [ val(meta), /path/to/genome, /path/to/cds, /path/to/gff, /path/to/prot_fa]
-        
+         braker_tsv // channel: [ val(meta), /path/to/genome, /path/to/cds, /path/to/gff, /path/to/prot_fa]
+         protein_tsv // channel: [ val(meta), /path/to/prot_fa]
+
         main:
-         // parse data
+         // parse denovo protein datasets
          Channel
-                .fromPath( input_tsv )
+                .fromPath( braker_tsv )
                 .splitCsv( header: true, sep: '\t')
                 .multiMap{ row -> 
                         genome: [row.meta, row.genome]
@@ -16,18 +17,32 @@ workflow grc_dnds_flow {
                         gff: [row.meta, row.gff]
                         prot_fa: [row.meta, row.prot_fa]
                         }
-                .set{ data_ch }
+                .set{ braker_ch }
+
+         // parse preprocessed protein datasets
+         Channel
+                .fromPath( protein_tsv )
+                .splitCsv( header: true, sep: '\t')
+                .map{ row ->
+                        [row.meta, row.prot_fa]
+                }
+                .set{ prot_ch }
 
          // select suitable proteins for orthology inference
-         filterIncompleteGeneModelsAGAT(data_ch.gff.join(data_ch.genome))
+         filterIncompleteGeneModelsAGAT(braker_ch.gff.join(data_ch.genome))
          getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         select_proteins(getLongestIsoformAGAT.out.join(data_ch.prot_fa))
+         select_proteins(getLongestIsoformAGAT.out.join(braker_ch.prot_fa))
 
          // checking
          select_proteins
                 .collect{ flat:false }
+                .concat(prot_ch
+                        .collect{ flat:false }
+                        )
                 .map{ it.transpose() }
-                .view()
+                .set( selected_prot_ch )
+
+        selected_prot_ch.view()
 
          // orthology inference
          //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
