@@ -38,9 +38,8 @@ workflow grc_dnds_flow {
                 .concat(prot_ch)
                 .collect( flat:false )
                 .map{ it.transpose() }
-                .view()
-                //.set( selected_prot_ch )
+                .set( selected_prot_ch )
 
          // orthology inference
-         //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
+         orthofinder(selected_prot_ch)
 }
