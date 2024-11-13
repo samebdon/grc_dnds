@@ -34,11 +34,10 @@ workflow grc_dnds_flow {
                 .set{ prot_ch }
 
          // combine denovo and preprocessed protein datasets
-         select_proteins.out
+         selected_prot_ch = select_proteins.out
                 .concat(prot_ch)
                 .collect( flat:false )
                 .map{ it.transpose() }
-                .set( selected_prot_ch )
 
          // orthology inference
          orthofinder(selected_prot_ch)

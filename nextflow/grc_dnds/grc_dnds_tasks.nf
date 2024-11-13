@@ -48,7 +48,7 @@ process select_proteins{
 process orthofinder {
         publishDir params.outdir, mode:'copy'
         cpus 16
-        scratch true
+        memory '8G'
 
         input:
         tuple val(meta_list), path(prot_fastas, stageAs: "fastas/*")
