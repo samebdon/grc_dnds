@@ -37,7 +37,6 @@ process select_proteins{
 
         output:
         tuple val(meta), path("${meta}.selected_proteins.fa")
-        path("${meta}.selected_proteins.fa"), emit: file
 
         script:
         """
