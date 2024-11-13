@@ -10,7 +10,7 @@ workflow split_tsv{
                 .fromPath( input_tsv )
                 .splitCsv( header: true, sep: '\t')
                 .map{ row -> 
-                        tuple( row.meta, row.annotation_source, row.genome. row.cds, row.gff, row.prot_fa)
+                        tuple( row.meta, row.annotation_source, row.genome, row.cds, row.gff, row.prot_fa)
                 }
                 .branch{ row ->
                         braker: row.annotation_source = "braker"
@@ -70,19 +70,19 @@ workflow filter_braker{
 
 }
 
-workflow filter_ncbi{
-        take:
+//workflow filter_ncbi{
+//        take:
+//
+//        main:
+//
+//}
 
-        main:
-
-}
-
-workflow filter_flybase{
-        take:
-
-        main:
-
-}
+//workflow filter_flybase{
+//        take:
+//
+//        main:
+//
+//}
 
 workflow orthofinder {
 
