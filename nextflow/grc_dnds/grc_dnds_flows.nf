@@ -28,21 +28,22 @@ workflow grc_dnds_flow {
                 }
                 .set{ prot_ch }
 
+        braker_ch.view()
+        prot_ch.view()
+
          // select suitable proteins for orthology inference
-         filterIncompleteGeneModelsAGAT(braker_ch.gff.join(data_ch.genome))
+         filterIncompleteGeneModelsAGAT(braker_ch.gff.join(braker_ch.genome))
          getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
          select_proteins(getLongestIsoformAGAT.out.join(braker_ch.prot_fa))
 
          // checking
-         select_proteins
-                .collect{ flat:false }
-                .concat(prot_ch
-                        .collect{ flat:false }
-                        )
-                .map{ it.transpose() }
-                .set( selected_prot_ch )
+         //select_proteins
+         //       .collect{ flat:false }
+         //       .concat(prot_ch)
+         //       .map{ it.transpose() }
+         //       .set( selected_prot_ch )
 
-        selected_prot_ch.view()
+        //selected_prot_ch.view()
 
          // orthology inference
          //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
