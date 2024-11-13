@@ -20,16 +20,16 @@ workflow grc_dnds_flow {
                 .set{ braker_ch }
 
          // parse preprocessed protein datasets
-         Channel
-                .fromPath( protein_tsv )
-                .splitCsv( header: true, sep: '\t')
-                .map{ row ->
-                        [row.meta, row.prot_fa]
-                }
-                .set{ prot_ch }
+         //Channel
+         //       .fromPath( protein_tsv )
+         //       .splitCsv( header: true, sep: '\t')
+         //       .map{ row ->
+         //               [row.meta, row.prot_fa]
+         //       }
+         //       .set{ prot_ch }
 
-        braker_ch.view()
-        prot_ch.view()
+        braker_ch.genome.view()
+        //prot_ch.view()
 
          // select suitable proteins for orthology inference
          filterIncompleteGeneModelsAGAT(braker_ch.gff.join(braker_ch.genome))
