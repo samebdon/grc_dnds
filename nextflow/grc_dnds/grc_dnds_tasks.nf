@@ -40,7 +40,8 @@ process select_proteins{
 
         script:
         """
-        select_proteins.sh ${gff} ${prot_fa} > ${meta}.selected_proteins.fa
+        rm -f ${meta}.selected_proteins.fa
+        select_proteins.sh ${gff} ${prot_fa} >> ${meta}.selected_proteins.fa
         """
 
 }
