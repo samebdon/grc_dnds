@@ -19,6 +19,11 @@ workflow grc_dnds_flow {
                         }
                 .set{ braker_ch }
 
+         // select suitable proteins for orthology inference
+         filterIncompleteGeneModelsAGAT(braker_ch.gff.join(braker_ch.genome))
+         getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
+         select_proteins(getLongestIsoformAGAT.out.join(braker_ch.prot_fa))
+
          // parse preprocessed protein datasets
          Channel
                 .fromPath( protein_tsv )
@@ -28,19 +33,13 @@ workflow grc_dnds_flow {
                 }
                 .set{ prot_ch }
 
-         // select suitable proteins for orthology inference
-         filterIncompleteGeneModelsAGAT(braker_ch.gff.join(braker_ch.genome))
-         getLongestIsoformAGAT(filterIncompleteGeneModelsAGAT.out)
-         select_proteins(getLongestIsoformAGAT.out.join(braker_ch.prot_fa))
-
          // combine denovo and preprocessed protein datasets
          select_proteins.out
                 .concat(prot_ch)
                 .collect( flat:false )
                 .map{ it.transpose() }
-                .set( selected_prot_ch )
-
-        selected_prot_ch.view()
+                .view()
+                //.set( selected_prot_ch )
 
          // orthology inference
          //orthofinder(select_proteins.collect(flat:false).map{it.transpose()})
