@@ -84,7 +84,7 @@ workflow filter_braker{
 //
 //}
 
-workflow orthofinder {
+workflow orthology_inference {
 
         take:
          prot_fasta_ch

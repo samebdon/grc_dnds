@@ -6,7 +6,7 @@ log.info """\
          """
          .stripIndent()
 
-include { split_tsv; filter_braker; orthofinder } from './grc_dnds_flows.nf'
+include { split_tsv; filter_braker; orthology_inference} from './grc_dnds_flows.nf'
 include { split_data_ch as split_data_ch_braker} from './grc_dnds_flows.nf'
 include { split_data_ch as split_data_ch_ncbi} from './grc_dnds_flows.nf'
 include { split_data_ch as split_data_ch_flybase} from './grc_dnds_flows.nf'
@@ -25,7 +25,7 @@ workflow {
         //filter_braker.out
         //                    .concat(filter_ncbi.out, filter_flybase.out)
         //                    .set { prot_fa_ch }
-        // orthofinder(prot_fa_ch)
+        // orthology_inference(prot_fa_ch)
 }
 
 // mamba activate grc_dnds
